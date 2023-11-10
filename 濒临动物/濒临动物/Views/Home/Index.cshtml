@@ -1,0 +1,148 @@
+﻿@model 濒临动物.Models.ViewModel.HomeIndexData
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="@Url.Content("~/css/HomeIndex.css")" rel="stylesheet" type="text/css" />
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+	<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+	<title>病危动物</title>
+</head>
+<body>
+	<div id="app">
+		<div class="banner">
+			<img :src="banner_urls[banner_counter]" />
+		</div>
+
+
+		<div class="title">
+			<div class="content">
+				<p style="font-size:22px;">@Model.Slogan</p>
+				<div class="details_btn">Click here for details</div>
+			</div>
+		</div>
+
+		<div class="news">
+			<div>
+				<p>What's new</p>
+			</div>
+			<div class="news_list">
+				@foreach (var item in Model.NewsList)
+				{
+					<div class="item">
+						<div class="img-box">
+							<img src="@Html.DisplayFor(m=>item.imgUrl)" />
+						</div>
+						<div class="content">
+							<p>@Html.DisplayFor(m=>item.title)</p>
+						</div>
+						<div class="pub_date">
+							<span>@Html.DisplayFor(m=>item.putTime)</span>
+						</div>
+					</div>
+				}
+
+				@* <div class="item" v-for="(item,index) in news_list" :key="index">
+				<div class="img-box">
+				<img :src="item.img" />
+				</div>
+				<div class="content">
+				<p>{{item.title}}</p>
+				</div>
+				<div class="pub_date">
+				<span>{{item.pubDate}}</span>
+				</div>
+				</div>*@
+
+			</div>
+			<div class="all_news">
+				<a href="">See all messages</a>
+			</div>
+		</div>
+
+		<div class="work_area">
+			<div>
+				<p>Field of work</p>
+			</div>
+			<div class="area">
+				@foreach (var item in Model.WorkAreaList)
+				{
+					<div>
+						<div class="item area_title">
+							<p>@Html.DisplayFor(m=>item.Area)</p>
+						</div>
+
+						@foreach (var el in item.Types)
+						{
+							<div class="item area_img" v-on:click="naviToDetails(@el.Id)">
+								<img src="@Html.DisplayFor(m=>el.ImgUrl)" />
+								<span>@Html.DisplayFor(m=>el.Type)</span>
+							</div>
+						}
+
+					</div>
+				}
+				@*<div v-for="(item,index) in area_list" :key="index">
+				<div class="item area_title">
+				<p>{{item.title}}</p>
+				</div>
+
+				<div class="item area_img" v-for="(el,idx) in item.list" :key="idx">
+				<img :src="el.img"/>
+				<span>{{el.type}}</span>
+				</div>
+				</div>*@
+			</div>
+		</div>
+
+
+	</div>
+	<script>
+		new Vue({
+			el: '#app',
+			data: {
+
+				banner_urls: [
+					'https://wildaidchina.org.cn/wp-content/uploads/2019/09/eddie-chen-turtle-banner.jpg',
+					'https://wildaidchina.org.cn/wp-content/uploads/2020/11/home-banner-elephants.jpg'
+					
+				],
+				banner_counter: 0,
+				
+			},
+			methods: {
+				loadBanner() {
+					$.ajax({
+						url: '/Home/Hello',
+						type: 'get',
+						success: (res) => {
+							console.log(res)
+							this.slogan = res
+						},
+						error: (err) => {
+							console.log(err)
+						}
+					})
+				},
+				bannerTimer() {
+					let len = this.banner_urls.length;
+					setInterval(() => {
+						this.banner_counter = this.banner_counter == len - 1 ? 0 : this.banner_counter += 1
+						console.log(this.banner_counter)
+					}, 3000)
+				},
+				naviToDetails(id){
+					location = '/Details/Index?id='+4
+				}
+			},
+			created() {
+				this.bannerTimer();
+				this.loadBanner();
+			}
+		})
+	</script>
+</body>
+</html>
+

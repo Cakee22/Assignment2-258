@@ -1,0 +1,164 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="@Url.Content("~/css/SearchIndex.css")" rel="stylesheet" type="text/css" />
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+	<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+	<title>濒危动物</title>
+</head>
+<body>
+	<div id="app">
+		<div class="banner">
+			<img src="https://pic.vjshi.com/2019-08-22/49cbd5552ec782cddc7699ec88272ece/online/496111661ae49692bf4b1bfa133c2a05.jpg?x-oss-process=style/resize_w_720" />
+			<h1>What's News'</h1>
+		</div>
+		<div class="filter-box">
+			<div>
+				<span>Sort by date in </span>
+				<button id="sort" class="sort" v-on:click="Sort">{{sort_display}}</button>
+				<span>order</span>
+			</div>
+		</div>
+		<div class="res-box">
+			<div class="news_list">
+				<div class="item" v-for="(item,index) in news_list" :key="index">
+					<div class="img-box">
+						<img :src="item.imgUrl" />
+					</div>
+					<div class="content">
+						<p>{{item.title}}</p>
+					</div>
+					<div class="pub_date">
+						<span>{{item.putTime}}</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="pagination-box">
+			<div id="before_btn" v-on:click="GoPrevious">Previous</div>
+			<div id="current_page">{{current_page}}</div>
+			<div id="next_btn" v-on:click="GoNext">Next</div>
+		</div>
+
+	</div>
+
+	<script>
+		new Vue({
+			el:'#app',
+			data:{
+				sort_display: 'ascending',
+				sort_mode:0,
+				current_page:1,
+				news_list:[]
+			},
+			methods:{
+				loadNewsList(){
+					let that = this
+					$.ajax({
+						url: '/Search/LoadNews',
+						type: 'get',
+						success: (res) => {
+							console.log(res)
+							that.news_list=res
+						},
+						error: (err) => {
+							console.log(err)
+						}
+					})
+				},
+				Sort(){
+					let that = this
+					$.ajax({
+						url:'/Search/Sort?mode='+that.sort_mode+'&currentIdx='+that.current_page,
+						type:'get',
+						success:(res)=>{
+							console.log(res)
+							that.news_list=res
+							that.sort_display = that.sort_mode == 0 ? 'reverse' : 'ascending'
+							that.sort_mode = that.sort_mode==0?1:0
+						},
+						error:(err)=>{
+							console.log(err)
+						}
+					})
+				},
+				GoPrevious(){
+					if(this.current_page==1){return}
+					let that = this
+					$.ajax({
+						url: '/Search/Previous?currentIdx=' + that.current_page,
+						type: 'get',
+						success: (res) => {
+							console.log(res)
+							that.news_list = res
+							that.current_page-=1
+						},
+						error: (err) => {
+							console.log(err)
+						}
+					})
+				},
+				GoNext() {
+					let that = this
+					$.ajax({
+						url: '/Search/Next?currentIdx=' + that.current_page,
+						type: 'get',
+						success: (res) => {
+							console.log(res)
+							that.news_list = res
+							that.current_page += 1
+						},
+						error: (err) => {
+							console.log(err)
+						}
+					})
+				}
+			
+			},
+			created() {
+				console.log('inin')
+				this.loadNewsList()
+			}
+		})
+		//new Vue({
+		//	el: '#app',
+		//	data: {
+		//		msg:'hello',
+		//		current_page: '1页',//当前页
+		//		sort_mode: 0,//0代表降序,1代表升序,
+		//		sort_display: '升序',
+
+		//		news_list: []
+		//	},
+		//	methods:{
+		//		//Sort(){
+		//		//	let that = this
+		//		//	$.ajax({
+		//		//		url:'/Search/Sort?mode='+that.sort_mode,
+		//		//		tyoe:'get',
+		//		//		success:(res)=>{
+		//		//			console.log(res)
+		//		//			console.log("请求完了")
+		//		//			that.news_list = res
+		//		//			that.sort_display = that.sort_mode == 1 ? "降序" : "升序"
+		//		//			that.sort_mode = that.sort_mode == 1 ? 0 : 1
+		//		//		},
+		//		//		error:(err)=>{
+		//		//			console.log(err)
+		//		//		}
+		//		//	})
+		//		//}
+		//	},
+		//	created(){
+		//		console.log('hi')
+		//	}
+		//)}
+
+	</script>
+</body>
+</html>

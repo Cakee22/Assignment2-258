@@ -1,0 +1,48 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model 濒临动物.Models.ViewModel.AboutIndexData
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="@Url.Content("~/css/AboutIndex.css")" rel="stylesheet" type="text/css" />
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+	<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+	<title>濒危动物</title>
+</head>
+<body>
+	<div class="banner">
+		<img src="https://ts1.cn.mm.bing.net/th/id/R-C.2cead4e88bba92489b6928a8e98ef58b?rik=cXj%2fzCRnH9k9Uw&riu=http%3a%2f%2fwww.deskcar.com%2fdesktop%2ffengjing%2f2011222122152%2f1.jpg&ehk=IK7HBvjt%2bdkrNeJi7tjYD1T6g5FMk73Xcl5%2f4x3FjcA%3d&risl=&pid=ImgRaw&r=0" />
+		<h1>About us</h1>
+	</div>
+
+	<div class="wrapper">
+		<div class="slogan">
+			<p>@Model.Slogan1.Content</p>
+		</div>
+
+		<div class="content">
+			<div class="video">
+				@*<img style="height:200px;width:300px;" src="https://wildaidchina.org.cn/wp-content/uploads/2020/11/home-banner-elephants.jpg"/>*@
+				<video src="https://prod-streaming-video-msn-com.akamaized.net/a8c412fa-f696-4ff2-9c76-e8ed9cdffe0f/604a87fc-e7bc-463e-8d56-cde7e661d690.mp4" height="300" width="500" controls autoplay></video>
+
+				<div>
+					<p>
+						@Model.Slogan2.Content
+					</p>
+				</div>
+			</div>
+			<div>
+				<p>
+					@Model.Slogan3.Content
+				</p>
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>
